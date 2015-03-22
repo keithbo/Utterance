@@ -10,7 +10,7 @@
 	public class ExpressionCache : ExpressionCache<string, ExpressionCacheItem>
 	{
 		public ExpressionCache()
-			: base(new Cache<Expression, ExpressionCacheItem>.StringCacheCore(), EqualityComparer<string>.Default)
+			: base(new Cache<Expression, ExpressionCacheItem>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
 		{
 		}
 
@@ -21,6 +21,7 @@
 	}
 
 	public abstract class ExpressionCache<TKey, TCacheItem> : Cache<TKey, Expression, TCacheItem>
+		where TKey : IEquatable<TKey>
 		where TCacheItem : ExpressionCacheItem<TKey>
 	{
 		public ExpressionCache()
@@ -28,7 +29,7 @@
 		{
 		}
 
-		public ExpressionCache(ICacheCore core, IEqualityComparer<TKey> keyEqualityComparer)
+		public ExpressionCache(ICacheKeyFactory core, IEqualityComparer<TKey> keyEqualityComparer)
 			: base(core, keyEqualityComparer)
 		{
 		}

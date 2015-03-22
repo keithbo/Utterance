@@ -1,5 +1,6 @@
 ﻿namespace Utterance
 {
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading;
 
@@ -34,6 +35,11 @@
 		}
 
 		public int Step(params int[] steps)
+		{
+			return Step((IEnumerable<int>)steps);
+		}
+
+		public int Step(IEnumerable<int> steps)
 		{
 			int initial, value;
 			do

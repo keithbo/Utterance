@@ -16,6 +16,7 @@
 	}
 
 	public abstract class CacheItemExpression<TKey, TCacheItem> : Expression
+		where TKey : IEquatable<TKey>
 		where TCacheItem : ExpressionCacheItem<TKey>
 	{
 		public TCacheItem CacheItem

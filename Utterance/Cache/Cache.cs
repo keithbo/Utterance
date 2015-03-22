@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Utterance.Cache
+﻿namespace Utterance.Cache
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.Threading;
+	using System.Threading.Tasks;
+
 	public abstract class Cache<TValue, TCacheItem> : Cache<string, TValue, TCacheItem>
 		where TCacheItem : CacheItem<string, TValue>
 	{
 
 		protected Cache()
-			: base(new StringCacheCore(), EqualityComparer<string>.Default)
+			: base(new StringCacheKeyFactory(), EqualityComparer<string>.Default)
 		{
 		}
 
-		public class StringCacheCore : Cache<string, TValue, TCacheItem>.ICacheCore
+		public class StringCacheKeyFactory : Cache<string, TValue, TCacheItem>.ICacheKeyFactory
 		{
 			private readonly string _root;
 			private int _index;
 
-			public StringCacheCore()
+			public StringCacheKeyFactory()
 			{
 				_root = Guid.NewGuid().ToString();
 				_index = 0;
@@ -41,7 +41,7 @@ namespace Utterance.Cache
 	{
 		private readonly IEqualityComparer<TKey> _keyEqualityComparer;
 		private readonly Dictionary<TKey, TCacheItem> _cache;
-		private readonly ICacheCore _core;
+		private readonly ICacheKeyFactory _core;
 		private readonly object _synchronizationContext = new object();
 		protected object SynchronizationContext
 		{
@@ -53,9 +53,9 @@ namespace Utterance.Cache
 		{
 		}
 
-		protected Cache(ICacheCore core, IEqualityComparer<TKey> keyEqualityComparer)
+		protected Cache(ICacheKeyFactory core, IEqualityComparer<TKey> keyEqualityComparer)
 		{
-			_core = core ?? new DefaultCacheCore();
+			_core = core ?? new DefaultCacheKeyFactory();
 			_keyEqualityComparer = keyEqualityComparer ?? EqualityComparer<TKey>.Default;
 			_cache = new Dictionary<TKey, TCacheItem>(_keyEqualityComparer);
 		}
@@ -129,17 +129,14 @@ namespace Utterance.Cache
 			}
 		}
 
-		protected virtual TCacheItem CreateCacheItem(TKey key, TValue value)
-		{
-			return (TCacheItem)new CacheItem<TKey, TValue>(key, value);
-		}
+		protected abstract TCacheItem CreateCacheItem(TKey key, TValue value);
 
-		public interface ICacheCore
+		public interface ICacheKeyFactory
 		{
 			TKey NewKey();
 		}
 
-		public class DefaultCacheCore : ICacheCore
+		public class DefaultCacheKeyFactory : ICacheKeyFactory
 		{
 			public TKey NewKey()
 			{

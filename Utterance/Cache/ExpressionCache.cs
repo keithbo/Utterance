@@ -7,22 +7,24 @@
 	using System.Text;
 	using System.Threading.Tasks;
 
-	public class ExpressionCache : ExpressionCache<string, ExpressionCacheItem>
+	public class ExpressionCache<TExpression> : ExpressionCache<string, TExpression, ExpressionCacheItem<TExpression>>
+		where TExpression : Expression
 	{
 		public ExpressionCache()
-			: base(new Cache<Expression, ExpressionCacheItem>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+			: base(new Cache<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
 		{
 		}
 
-		protected override ExpressionCacheItem CreateCacheItem(string key, Expression value)
+		protected override ExpressionCacheItem<TExpression> CreateCacheItem(string key, TExpression value)
 		{
-			return new ExpressionCacheItem(key, value);
+			return new ExpressionCacheItem<TExpression>(key, value);
 		}
 	}
 
-	public abstract class ExpressionCache<TKey, TCacheItem> : Cache<TKey, Expression, TCacheItem>
+	public abstract class ExpressionCache<TKey, TExpression, TCacheItem> : Cache<TKey, TExpression, TCacheItem>
 		where TKey : IEquatable<TKey>
-		where TCacheItem : ExpressionCacheItem<TKey>
+		where TExpression : Expression
+		where TCacheItem : ExpressionCacheItem<TKey, TExpression>
 	{
 		public ExpressionCache()
 			: this(null, null)

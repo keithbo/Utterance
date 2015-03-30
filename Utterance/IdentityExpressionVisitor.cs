@@ -259,11 +259,6 @@ namespace Utterance
 			return base.VisitUnary(node);
 		}
 
-		//protected static int SafeHashCode(object o)
-		//{
-		//	return o != null ? o.GetHashCode() : 0;
-		//}
-
 		protected static byte[] ToBytes(object value)
 		{
 			if (value == null) return NullValue;
@@ -297,33 +292,6 @@ namespace Utterance
 
 			return BitConverter.GetBytes(value.GetHashCode());
 		}
-
-		//protected static byte[] ToBytes(bool value)
-		//{
-		//	return BitConverter.GetBytes(value);
-		//}
-
-		//protected static byte[] ToBytes(int value)
-		//{
-		//	return BitConverter.GetBytes(value);
-		//}
-
-		//protected static byte[] ToBytes(Type value)
-		//{
-		//	// hashcode should be unique for a type as types are static
-		//	return BitConverter.GetBytes(SafeHashCode(value));
-		//}
-
-		//protected static byte[] ToBytes(MemberInfo value)
-		//{
-		//	// hashcode should be unique for reflection components as they are static
-		//	return BitConverter.GetBytes(SafeHashCode(value));
-		//}
-
-		//protected static byte[] ToBytes(SymbolDocumentInfo value)
-		//{
-		//	return BitConverter.GetBytes(SafeHashCode(value));
-		//}
 
 		protected static byte[] ToBytes(string value)
 		{

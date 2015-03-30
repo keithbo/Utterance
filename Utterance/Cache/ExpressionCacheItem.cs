@@ -7,18 +7,20 @@
 	using System.Text;
 	using System.Threading.Tasks;
 
-	public class ExpressionCacheItem : ExpressionCacheItem<string>
+	public class ExpressionCacheItem<TExpression> : ExpressionCacheItem<string, TExpression>
+		where TExpression : Expression
 	{
-		public ExpressionCacheItem(string key, Expression expression)
+		public ExpressionCacheItem(string key, TExpression expression)
 			: base(key, expression)
 		{
 		}
 	}
 
-	public abstract class ExpressionCacheItem<TKey> : CacheItem<TKey, Expression>
+	public abstract class ExpressionCacheItem<TKey, TExpression> : CacheItem<TKey, TExpression>
 		where TKey : IEquatable<TKey>
+		where TExpression : Expression
 	{
-		protected ExpressionCacheItem(TKey key, Expression expression)
+		protected ExpressionCacheItem(TKey key, TExpression expression)
 			: base(key, expression)
 		{
 		}

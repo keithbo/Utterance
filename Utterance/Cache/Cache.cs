@@ -101,18 +101,18 @@
 			}
 		}
 
-		public TValue GetOrAdd(TKey key, TValue value)
+		public TCacheItem GetOrAdd(TKey key, TValue value)
 		{
-			return GetOrAddInternal(key, _ => value).Value;
+			return GetOrAddInternal(key, _ => value);
 		}
 
-		public TValue GetOrAdd(TKey key, Func<TKey, TValue> add)
+		public TCacheItem GetOrAdd(TKey key, Func<TKey, TValue> add)
 		{
 			if (add == null)
 			{
 				throw new ArgumentNullException();
 			}
-			return GetOrAddInternal(key, add).Value;
+			return GetOrAddInternal(key, add);
 		}
 
 		protected TCacheItem GetOrAddInternal(TKey key, Func<TKey, TValue> add)

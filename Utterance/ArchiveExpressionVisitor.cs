@@ -1,5 +1,6 @@
 ﻿namespace Utterance
 {
+	using System;
 	using System.Linq.Expressions;
 
 	public class ArchiveExpressionVisitor : ArchiveExpressionVisitor<IExpressionArchive>
@@ -14,6 +15,7 @@
 		where TArchive : IExpressionArchive
 	{
 		private TArchive _archive;
+		private Func<Expression, bool> _accept;
 
 		public TArchive Archive
 		{
@@ -28,14 +30,28 @@
 		}
 
 		public ArchiveExpressionVisitor(TArchive archive)
+			: this(archive, null)
+		{
+		}
+
+		public ArchiveExpressionVisitor(TArchive archive, Func<Expression, bool> accept)
 		{
 			Archive = archive;
+			_accept = accept ?? DefaultAccept;
 		}
 
 		public override Expression Visit(Expression node)
 		{
-			Archive.Add(node);
+			if (_accept(node))
+			{
+				Archive.Add(node);
+			}
 			return base.Visit(node);
+		}
+
+		private static bool DefaultAccept(Expression expression)
+		{
+			return true;
 		}
 	}
 }

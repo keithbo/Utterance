@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Utterance")]
+[assembly: AssemblyTitle("Utterance.Linq")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Utterance")]
-[assembly: AssemblyCompany("Keith Bosacker")]
-[assembly: AssemblyTrademark("https://github.com/keithbo/Container4AspNet")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Utterance.Linq")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0d7cc6c4-759f-45ea-9776-dbe038581ca8")]
+[assembly: Guid("aeb2f4dc-71ae-4926-894b-235018253256")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,9 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-#if DEBUG
-[assembly: AssemblyInformationalVersion("1.0.0-alpha")]
-#else
-[assembly: AssemblyInformationalVersion("1.0.0")]
-#endif

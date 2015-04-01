@@ -44,7 +44,7 @@ namespace Utterance.Linq
 			public LambdaExpression SourceSeedFuncResultSelector { get { return Cache<TSource, TAccumulate, TResult>.SourceSeedFuncResultSelector; } }
 		}
 		#endregion Access
-		#region Cache
+		#region CacheBase
 		public static class Cache<TSource>
 		{
 			public static readonly Expression<Func<IEnumerable<TSource>, Func<TSource, TSource, TSource>, TSource>> SourceFunc = (source, func) => source.Aggregate(func);
@@ -59,6 +59,6 @@ namespace Utterance.Linq
 		{
 			public static readonly Expression<Func<IEnumerable<TSource>, TAccumulate, Func<TAccumulate, TSource, TAccumulate>, Func<TAccumulate, TResult>, TResult>> SourceSeedFuncResultSelector = (source, seed, func, resultSelector) => source.Aggregate(seed, func, resultSelector);
 		}
-		#endregion Cache
+		#endregion CacheBase
 	}
 }

@@ -13,7 +13,6 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -30,7 +29,7 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -47,7 +46,8 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -66,7 +66,9 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -86,7 +88,10 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
+		/// <typeparam name="T4"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -107,7 +112,11 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
+		/// <typeparam name="T4"></typeparam>
+		/// <typeparam name="T5"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -129,7 +138,12 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
+		/// <typeparam name="T4"></typeparam>
+		/// <typeparam name="T5"></typeparam>
+		/// <typeparam name="T6"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -152,7 +166,13 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
+		/// <typeparam name="T4"></typeparam>
+		/// <typeparam name="T5"></typeparam>
+		/// <typeparam name="T6"></typeparam>
+		/// <typeparam name="T7"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>
@@ -176,7 +196,14 @@
 		/// This is basically like creating an expression that calls the first and uses the result as the input for the second
 		/// but as one complete expression.
 		/// </summary>
-		/// <typeparam name="TFirstParam"></typeparam>
+		/// <typeparam name="T1"></typeparam>
+		/// <typeparam name="T2"></typeparam>
+		/// <typeparam name="T3"></typeparam>
+		/// <typeparam name="T4"></typeparam>
+		/// <typeparam name="T5"></typeparam>
+		/// <typeparam name="T6"></typeparam>
+		/// <typeparam name="T7"></typeparam>
+		/// <typeparam name="T8"></typeparam>
 		/// <typeparam name="TIntermediate"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
 		/// <param name="first"></param>

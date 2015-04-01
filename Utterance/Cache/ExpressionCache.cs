@@ -11,7 +11,7 @@
 		where TExpression : Expression
 	{
 		public ExpressionCache()
-			: base(new Cache<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+			: base(new CacheBase<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
 		{
 		}
 
@@ -21,7 +21,7 @@
 		}
 	}
 
-	public abstract class ExpressionCache<TKey, TExpression, TCacheItem> : Cache<TKey, TExpression, TCacheItem>
+	public abstract class ExpressionCache<TKey, TExpression, TCacheItem> : CacheBase<TKey, TExpression, TCacheItem>
 		where TKey : IEquatable<TKey>
 		where TExpression : Expression
 		where TCacheItem : ExpressionCacheItem<TKey, TExpression>

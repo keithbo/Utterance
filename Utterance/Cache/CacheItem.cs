@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace Utterance.Cache
 {
-	public abstract class CacheItem<TKey, TValue>
+	public class CacheItem<TValue> : CacheItem<string, TValue>
+	{
+		public CacheItem(string key, TValue value)
+			: base(key, value)
+		{
+		}
+	}
+
+	public class CacheItem<TKey, TValue>
 		where TKey : IEquatable<TKey>
 	{
-		protected CacheItem(TKey key, TValue value)
+		public CacheItem(TKey key, TValue value)
 		{
 			Key = key;
 			Value = value;

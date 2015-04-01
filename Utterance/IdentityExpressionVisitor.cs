@@ -7,9 +7,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Utterance.Cache;
 
 namespace Utterance
 {
+	/// <summary>
+	/// This is a complete abstract implementation of ExpressionVisitor that upon visitation of an
+	/// Expression graph will generate a equivelance byte array that can be used in downstream implementations
+	/// to create reproducable identity for the specific Expression.
+	/// Note: For any node that has non-primitive, non-expression content (ie, objects that aren't directly convertible
+	/// to byte form) the identity generation will use the objects' GetHashCode implementation to determine uniqueness.
+	/// </summary>
 	public abstract class IdentityExpressionVisitor : ResettingExpressionVisitor
 	{
 		protected byte[] Bytes
@@ -45,6 +53,8 @@ namespace Utterance
 			Stream = new MemoryStream();
 			Writer = new BinaryWriter(Stream, Encoding.Default);
 		}
+
+		#region ExpressionVisitor
 
 		protected void WriteBytes(params byte[][] steps)
 		{
@@ -259,7 +269,15 @@ namespace Utterance
 			return base.VisitUnary(node);
 		}
 
-		protected static byte[] ToBytes(object value)
+		#endregion ExpressionVisitor
+
+		#region ToBytes
+
+		protected static readonly byte[] NullValue = new byte[] { (byte)0 };
+
+		private Cache<IByteConverter> _byteConverterCache;
+
+		protected byte[] ToBytes(object value)
 		{
 			if (value == null) return NullValue;
 
@@ -270,32 +288,9 @@ namespace Utterance
 				case TypeCode.Byte:
 					return new byte[] { (byte)value };
 
-				case TypeCode.Boolean:
-				case TypeCode.Char:
-				case TypeCode.Int16:
-				case TypeCode.UInt16:
-				case TypeCode.Int32:
-				case TypeCode.UInt32:
-				case TypeCode.Int64:
-				case TypeCode.UInt64:
-				case TypeCode.Single:
-				case TypeCode.Double:
-				case TypeCode.Decimal:
-				case TypeCode.String:
-					Func<object, byte[]> converter;
-					if (Converters.BasicConverters.TryGetValue(valueType, out converter))
-					{
-						return converter(value);
-					}
-					break;
+				default:
+					return GetConverter(valueType).Convert(value);
 			}
-
-			return BitConverter.GetBytes(value.GetHashCode());
-		}
-
-		protected static byte[] ToBytes(string value)
-		{
-			return Encoding.Default.GetBytes(value ?? string.Empty);
 		}
 
 		protected static byte[] ToBytes(Enum value)
@@ -309,7 +304,56 @@ namespace Utterance
 			return new byte[0];
 		}
 
-		protected static readonly byte[] NullValue = new byte[] { (byte)0 };
+		protected IByteConverter GetConverter(Type keyType)
+		{
+			IByteConverter converter;
+			if (_byteConverterCache == null)
+			{
+				if (!Converters.ByteConverters.TryGetValue(keyType, out converter))
+				{
+					converter = Converters.ByteConverters[typeof(object)];
+				}
+			}
+			else
+			{
+				var item = _byteConverterCache.Get(keyType.FullName) ?? _byteConverterCache.Get(typeof(object).FullName);
+				converter = item.Value;
+			}
+			return converter;
+		}
+
+		protected void RegisterByteConverter(Type keyType, IByteConverter converter)
+		{
+			EnsureCache();
+			_byteConverterCache.AddOrUpdate(keyType.FullName, converter, (k, v) => converter);
+		}
+
+		protected void RegisterByteConverter<T>(IByteConverter<T> converter)
+		{
+			RegisterByteConverter(typeof(T), new CastByteConverterAdapter<T>(converter));
+		}
+
+		private void EnsureCache()
+		{
+			if (_byteConverterCache != null) return;
+
+			_byteConverterCache = new Cache<IByteConverter>();
+			_byteConverterCache.AddAll(Converters.ByteConverters.ToDictionary(p => p.Key.FullName, p => p.Value));
+		}
+
+		private class CastByteConverterAdapter<T> : IByteConverter
+		{
+			private readonly IByteConverter<T> _converter;
+			public CastByteConverterAdapter(IByteConverter<T> converter)
+			{
+				_converter = converter;
+			}
+
+			public byte[] Convert(object value)
+			{
+				return _converter.Convert((T)value);
+			}
+		}
 
 		private static class Converters
 		{
@@ -327,20 +371,38 @@ namespace Utterance
 				{typeof(UInt64), (input) => BitConverter.GetBytes((UInt64)Convert.ChangeType(input, typeof(UInt64)))},
 			};
 
-			public static readonly IDictionary<Type, Func<object, byte[]>> BasicConverters = new Dictionary<Type, Func<object, byte[]>>
+			//public static readonly IDictionary<Type, Func<object, byte[]>> BasicConverters = new Dictionary<Type, Func<object, byte[]>>
+			//{
+			//	{typeof(bool), (input) => BitConverter.GetBytes((bool)input)},
+			//	{typeof(double), (input) => BitConverter.GetBytes((double)input)},
+			//	{typeof(Int16), (input) => BitConverter.GetBytes((Int16)input)},
+			//	{typeof(Int32), (input) => BitConverter.GetBytes((Int32)input)},
+			//	{typeof(Int64), (input) => BitConverter.GetBytes((Int64)input)},
+			//	{typeof(Single), (input) => BitConverter.GetBytes((Single)input)},
+			//	{typeof(UInt16), (input) => BitConverter.GetBytes((UInt16)input)},
+			//	{typeof(UInt32), (input) => BitConverter.GetBytes((UInt32)input)},
+			//	{typeof(UInt64), (input) => BitConverter.GetBytes((UInt64)input)},
+			//	{typeof(char), (input) => BitConverter.GetBytes((char)input)},
+			//	{typeof(string), (input) => Encoding.Default.GetBytes((string)input)},
+			//};
+
+			public static readonly IDictionary<Type, IByteConverter> ByteConverters = new Dictionary<Type, IByteConverter>
 			{
-				{typeof(bool), (input) => BitConverter.GetBytes((bool)input)},
-				{typeof(double), (input) => BitConverter.GetBytes((double)input)},
-				{typeof(Int16), (input) => BitConverter.GetBytes((Int16)input)},
-				{typeof(Int32), (input) => BitConverter.GetBytes((Int32)input)},
-				{typeof(Int64), (input) => BitConverter.GetBytes((Int64)input)},
-				{typeof(Single), (input) => BitConverter.GetBytes((Single)input)},
-				{typeof(UInt16), (input) => BitConverter.GetBytes((UInt16)input)},
-				{typeof(UInt32), (input) => BitConverter.GetBytes((UInt32)input)},
-				{typeof(UInt64), (input) => BitConverter.GetBytes((UInt64)input)},
-				{typeof(char), (input) => BitConverter.GetBytes((char)input)},
-				{typeof(string), (input) => Encoding.Default.GetBytes((string)input)},
+				{typeof(bool), new DelegatingByteConverter((input) => BitConverter.GetBytes((bool)input))},
+				{typeof(double), new DelegatingByteConverter((input) => BitConverter.GetBytes((double)input))},
+				{typeof(Int16), new DelegatingByteConverter((input) => BitConverter.GetBytes((Int16)input))},
+				{typeof(Int32), new DelegatingByteConverter((input) => BitConverter.GetBytes((Int32)input))},
+				{typeof(Int64), new DelegatingByteConverter((input) => BitConverter.GetBytes((Int64)input))},
+				{typeof(Single), new DelegatingByteConverter((input) => BitConverter.GetBytes((Single)input))},
+				{typeof(UInt16), new DelegatingByteConverter((input) => BitConverter.GetBytes((UInt16)input))},
+				{typeof(UInt32), new DelegatingByteConverter((input) => BitConverter.GetBytes((UInt32)input))},
+				{typeof(UInt64), new DelegatingByteConverter((input) => BitConverter.GetBytes((UInt64)input))},
+				{typeof(char), new DelegatingByteConverter((input) => BitConverter.GetBytes((char)input))},
+				{typeof(string), new DelegatingByteConverter((input) => Encoding.Default.GetBytes((string)input))},
+				{typeof(object), new DelegatingByteConverter((input) => BitConverter.GetBytes(input.GetHashCode()))},
 			};
 		}
+
+		#endregion ToBytes
 	}
 }

@@ -32,6 +32,7 @@ namespace Utterance.Tests
 			Expression<Func<IEnumerable<string>, string>> ex2 = (value) => value.First();
 			Expression<Func<IEnumerable<string>, string>> ex3 = (source) => source.First();
 			var visitor = new MyIdentityExpressionVisitor();
+			visitor.PropertyNames = true;
 
 			visitor.Visit(ex1);
 			var bytes1 = visitor.GeneratedBytes;

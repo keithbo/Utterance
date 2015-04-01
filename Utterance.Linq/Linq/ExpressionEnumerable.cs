@@ -13,7 +13,7 @@ namespace Utterance.Linq
 
 		public static Expression<Func<IEnumerable<TSource>, IEnumerable<TResult>>> Select<TSource, TResult>(this Expression<Func<IEnumerable<TSource>>> source, Expression<Func<TSource, TResult>> converter)
 		{
-			//Utterance.Linq.Select.Cache<TSource, TResult>.SourceSelector
+			//Utterance.Linq.Select.CacheBase<TSource, TResult>.SourceSelector
 			return null;
 		}
 	}

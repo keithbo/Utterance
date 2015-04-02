@@ -9,7 +9,11 @@
 	{
 
 		protected CacheBase()
-			: base(new StringCacheKeyFactory(), EqualityComparer<string>.Default)
+		{
+		}
+
+		protected CacheBase(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
+			: base(keyFactory, keyEqualityComparer)
 		{
 		}
 
@@ -38,7 +42,7 @@
 	{
 		private readonly IEqualityComparer<TKey> _keyEqualityComparer;
 		private readonly Dictionary<TKey, TCacheItem> _cache;
-		private readonly ICacheKeyFactory _core;
+		private readonly ICacheKeyFactory _keyFactory;
 		private readonly object _synchronizationContext = new object();
 		protected object SynchronizationContext
 		{
@@ -50,9 +54,9 @@
 		{
 		}
 
-		protected CacheBase(ICacheKeyFactory core, IEqualityComparer<TKey> keyEqualityComparer)
+		protected CacheBase(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
 		{
-			_core = core ?? new DefaultCacheKeyFactory();
+			_keyFactory = keyFactory ?? new DefaultCacheKeyFactory();
 			_keyEqualityComparer = keyEqualityComparer ?? EqualityComparer<TKey>.Default;
 			_cache = new Dictionary<TKey, TCacheItem>(_keyEqualityComparer);
 		}

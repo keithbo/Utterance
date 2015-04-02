@@ -7,11 +7,16 @@
 	using System.Text;
 	using System.Threading.Tasks;
 
-	public class ExpressionCache<TExpression> : ExpressionCache<string, TExpression, ExpressionCacheItem<TExpression>>
+	public class ExpressionCache<TExpression> : ExpressionCacheBase<string, TExpression, ExpressionCacheItem<TExpression>>
 		where TExpression : Expression
 	{
 		public ExpressionCache()
-			: base(new CacheBase<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+			: this(new CacheBase<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+		{
+		}
+
+		public ExpressionCache(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
+			: base(keyFactory, keyEqualityComparer)
 		{
 		}
 
@@ -21,19 +26,22 @@
 		}
 	}
 
-	public abstract class ExpressionCache<TKey, TExpression, TCacheItem> : CacheBase<TKey, TExpression, TCacheItem>
+	public class ExpressionCache<TKey, TExpression> : ExpressionCacheBase<TKey, TExpression, ExpressionCacheItem<TKey, TExpression>>
 		where TKey : IEquatable<TKey>
 		where TExpression : Expression
-		where TCacheItem : ExpressionCacheItem<TKey, TExpression>
 	{
 		public ExpressionCache()
-			: this(null, null)
 		{
 		}
 
-		public ExpressionCache(ICacheKeyFactory core, IEqualityComparer<TKey> keyEqualityComparer)
-			: base(core, keyEqualityComparer)
+		public ExpressionCache(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
+			: base(keyFactory, keyEqualityComparer)
 		{
+		}
+
+		protected override ExpressionCacheItem<TKey, TExpression> CreateCacheItem(TKey key, TExpression value)
+		{
+			return new ExpressionCacheItem<TKey, TExpression>(key, value);
 		}
 	}
 }

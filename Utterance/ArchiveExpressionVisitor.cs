@@ -9,6 +9,11 @@
 			: base(archive)
 		{
 		}
+
+		public ArchiveExpressionVisitor(IExpressionArchive archive, Func<Expression, bool> accept)
+			: base(archive, accept)
+		{
+		}
 	}
 
 	public class ArchiveExpressionVisitor<TArchive> : ExpressionVisitor

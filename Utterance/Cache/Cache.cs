@@ -1,10 +1,17 @@
 ﻿namespace Utterance.Cache
 {
 	using System;
+	using System.Collections.Generic;
 
 	public class Cache<TValue> : CacheBase<TValue, CacheItem<TValue>>
 	{
 		public Cache()
+			: this(new CacheBase<TValue, CacheItem<TValue>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+		{
+		}
+
+		public Cache(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
+			: base(keyFactory, keyEqualityComparer)
 		{
 		}
 
@@ -18,6 +25,11 @@
 		where TKey : IEquatable<TKey>
 	{
 		public Cache()
+		{
+		}
+
+		public Cache(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
+			: base(keyFactory, keyEqualityComparer)
 		{
 		}
 

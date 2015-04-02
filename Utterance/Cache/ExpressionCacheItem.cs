@@ -16,11 +16,11 @@
 		}
 	}
 
-	public abstract class ExpressionCacheItem<TKey, TExpression> : CacheItem<TKey, TExpression>
+	public class ExpressionCacheItem<TKey, TExpression> : CacheItem<TKey, TExpression>
 		where TKey : IEquatable<TKey>
 		where TExpression : Expression
 	{
-		protected ExpressionCacheItem(TKey key, TExpression expression)
+		public ExpressionCacheItem(TKey key, TExpression expression)
 			: base(key, expression)
 		{
 		}

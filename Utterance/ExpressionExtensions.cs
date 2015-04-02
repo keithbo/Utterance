@@ -9,18 +9,31 @@
 
 	public static class ExpressionExtensions
 	{
+		/// <summary>
+		/// Parses an Expression tree and evaluates all sub-expression trees that don't have a ParameterExpression
+		/// Returns a copy of the tree after evaluations have been processed.
+		/// 
+		/// This method was pulled from the excellent blog series:
+		/// http://blogs.msdn.com/b/mattwar/archive/2007/08/01/linq-building-an-iqueryable-provider-part-iii.aspx
+		/// </summary>
+		/// <param name="source">Expression to parse</param>
+		/// <returns>Expression tree after all evaluations have been completed</returns>
 		public static Expression PartialEval(this Expression source)
 		{
 			return PartialEval(source, null);
 		}
 
 		/// <summary>
+		/// Parses an Expression tree and evaluates all sub-expression trees flagged as evaluatable
+		/// by the provided predicate <paramref name="canEvaluate"/>
+		/// Returns a copy of the tree after evaluations have been processed.
+		/// 
 		/// This method was pulled from the excellent blog series:
 		/// http://blogs.msdn.com/b/mattwar/archive/2007/08/01/linq-building-an-iqueryable-provider-part-iii.aspx
 		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="canEvaluate"></param>
-		/// <returns></returns>
+		/// <param name="source">Expression to parse</param>
+		/// <param name="canEvaluate">Predicate function that determines what Expressions are evaluatable</param>
+		/// <returns>Expression tree after all evaluations have been completed</returns>
 		public static Expression PartialEval(this Expression source, Func<Expression, bool> canEvaluate)
 		{
 			return new SubtreeEvaluator(new Nominator(canEvaluate ?? DefaultPartialEvalPredicate).Nominate(source)).Eval(source);
@@ -31,6 +44,11 @@
 			return expression.NodeType != ExpressionType.Parameter;
 		}
 
+		/// <summary>
+		/// Retrieves an IEnumerator of all Expression nodes in the passed in Expression tree
+		/// </summary>
+		/// <param name="source">Expression tree to enumerate</param>
+		/// <returns>IEnumerator[Expression]</returns>
 		public static IEnumerator<Expression> GetEnumerator(this Expression source)
 		{
 			return new ExpressionEnumerator(source);
@@ -40,20 +58,35 @@
 		/// Constructs a new Expression by replacing usages of <paramref name="searchEx"/> with <paramref name="replaceEx"/>
 		/// in the expresion tree of <paramref name="expression"/>
 		/// </summary>
-		/// <param name="expression"></param>
-		/// <param name="searchEx"></param>
-		/// <param name="replaceEx"></param>
-		/// <returns></returns>
+		/// <param name="expression">Expression tree to replace in</param>
+		/// <param name="searchEx">Expression to be replaced</param>
+		/// <param name="replaceEx">Expression to replace <paramref name="searchEx"/> with</param>
+		/// <returns>A new Expression with <paramref name="replaceEx"/> substituted for <paramref name="searchEx"/></returns>
 		public static Expression Replace(this Expression expression, Expression searchEx, Expression replaceEx)
 		{
 			return new ReplaceExpressionVisitor(searchEx, replaceEx).Visit(expression);
 		}
 
+		/// <summary>
+		/// Constructs a new Expression by replacing usages of all expressions in <paramref name="pairs"/>
+		/// with their counterparts in the expression tree of <paramref name="expression"/>.
+		/// </summary>
+		/// <param name="expression">Expression tree to replace in</param>
+		/// <param name="pairs">Expression pairs stored in Tuple form, first value is the search expression,
+		/// second value is the replace expression</param>
+		/// <returns>A new Expression with all found pairs substituted</returns>
 		public static Expression ReplaceAll(this Expression expression, params Tuple<Expression, Expression>[] pairs)
 		{
 			return new ReplaceExpressionVisitor(pairs).Visit(expression);
 		}
 
+		/// <summary>
+		/// Constructs a new Expression by replacing usages of all expressions in <paramref name="pairs"/>
+		/// with their counterparts in the expression tree of <paramref name="expression"/>.
+		/// </summary>
+		/// <param name="expression">Expression tree to replace in</param>
+		/// <param name="pairs">An IDictionary map of Expression pairs to be replaced</param>
+		/// <returns>A new Expression with all found pairs substituted</returns>
 		public static Expression ReplaceAll(this Expression expression, IDictionary<Expression, Expression> pairs)
 		{
 			return new ReplaceExpressionVisitor(pairs).Visit(expression);

@@ -19,6 +19,9 @@
 
 		private int _hash;
 
+		/// <summary>
+		/// Integer value of the currently computed FNV1a hash
+		/// </summary>
 		public int Value
 		{
 			get { return _hash; }
@@ -29,16 +32,29 @@
 			Reset();
 		}
 
+		/// <summary>
+		/// Resets this FNV1aHash instance to its original state
+		/// </summary>
 		public void Reset()
 		{
 			Interlocked.Exchange(ref _hash, OffsetBasis);
 		}
 
+		/// <summary>
+		/// Hashes one or more integer values into the final computation of this FNV1aHash instance.
+		/// </summary>
+		/// <param name="steps">array of integer values to compute</param>
+		/// <returns>Current hash value after provided steps are computed</returns>
 		public int Step(params int[] steps)
 		{
 			return Step((IEnumerable<int>)steps);
 		}
 
+		/// <summary>
+		/// Hashes one or more integer values into the final computation of this FNV1aHash instance.
+		/// </summary>
+		/// <param name="steps">array of integer values to compute</param>
+		/// <returns>Current hash value after provided steps are computed</returns>
 		public int Step(IEnumerable<int> steps)
 		{
 			int initial, value;

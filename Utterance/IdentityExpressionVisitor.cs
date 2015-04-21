@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Utterance.Cache;
-
-namespace Utterance
+﻿namespace Utterance
 {
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.Reflection;
+	using System.Text;
+	using System.Threading;
+	using System.Threading.Tasks;
+	using Utterance.Cache;
+
 	/// <summary>
 	/// This is a complete abstract implementation of ExpressionVisitor that upon visitation of an
 	/// Expression graph will generate a equivelance byte array that can be used in downstream implementations

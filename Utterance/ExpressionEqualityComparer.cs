@@ -4,6 +4,9 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 
+	/// <summary>
+	/// Computes equality between Expression instances using the standard IEqualityComparer interface.
+	/// </summary>
 	public class ExpressionEqualityComparer : IEqualityComparer<Expression>
 	{
 		private static ExpressionEqualityComparer _default;
@@ -91,6 +94,12 @@
 			RequirePropertyNameEquivalence = requirePropertyNameEquivalence;
 		}
 
+		/// <summary>
+		/// Compare two Expression trees for equality.
+		/// </summary>
+		/// <param name="x">Left expression</param>
+		/// <param name="y">Right expression</param>
+		/// <returns></returns>
 		public bool Equals(Expression x, Expression y)
 		{
 			if (x == y)
@@ -457,6 +466,12 @@
 
 		#endregion Helpers
 
+		/// <summary>
+		/// Computes integer hashcode values for Expression trees.
+		/// Given tree equality, the same hashcode will be generated.
+		/// </summary>
+		/// <param name="obj">Expression to generate from</param>
+		/// <returns>integer hashcode</returns>
 		public int GetHashCode(Expression obj)
 		{
 			HashCodeVisitor.Visit(obj);

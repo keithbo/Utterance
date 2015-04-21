@@ -3,6 +3,11 @@
 	using System;
 	using System.Collections.Generic;
 
+	/// <summary>
+	/// Simple IEqualityComparer implementation that passes comparison to provided
+	/// delegate functions.
+	/// </summary>
+	/// <typeparam name="T">Type to be compared</typeparam>
 	public class DelegatingEqualityComparer<T> : IEqualityComparer<T>
 	{
 		private static IEqualityComparer<T> Default { get { return EqualityComparer<T>.Default; } }

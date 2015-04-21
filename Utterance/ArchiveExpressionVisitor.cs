@@ -3,6 +3,11 @@
 	using System;
 	using System.Linq.Expressions;
 
+	/// <summary>
+	/// ExpressionVisitor implementation that extracts each Expression node in an Expression tree
+	/// and passes it to an IExpressionArchive implementation based on acceptance from
+	/// a provided accept function.
+	/// </summary>
 	public class ArchiveExpressionVisitor : ArchiveExpressionVisitor<IExpressionArchive>
 	{
 		public ArchiveExpressionVisitor(IExpressionArchive archive)
@@ -16,6 +21,12 @@
 		}
 	}
 
+	/// <summary>
+	/// ExpressionVisitor implementation that extracts each Expression node in an Expression tree
+	/// and passes it to an IExpressionArchive implementation based on acceptance from
+	/// a provided accept function.
+	/// </summary>
+	/// <typeparam name="TArchive">Type derived from IExpressionArchive</typeparam>
 	public class ArchiveExpressionVisitor<TArchive> : ExpressionVisitor
 		where TArchive : IExpressionArchive
 	{

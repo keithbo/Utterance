@@ -7,6 +7,9 @@
 	using System.Text;
 	using System.Threading.Tasks;
 
+	/// <summary>
+	/// General use helper extensions for operating on Expression trees.
+	/// </summary>
 	public static class ExpressionExtensions
 	{
 		/// <summary>

@@ -3,6 +3,11 @@
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 
+	/// <summary>
+	/// Applies the IEnumerator interface to an Expression tree.
+	/// Provides in-order traversal of an expression tree, enumerating each
+	/// Expression node in the traversal.
+	/// </summary>
 	public class ExpressionEnumerator : IEnumerator<Expression>
 	{
 		private Visitor _visitor;

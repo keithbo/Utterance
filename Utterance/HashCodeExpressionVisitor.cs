@@ -6,12 +6,21 @@
 	using System.Linq.Expressions;
 	using System.Threading;
 
+	/// <summary>
+	/// ExpressionVisitor implementation based on IdentityExpressionVisitor. This class will
+	/// construct an FNV1a hash representation of an Expression tree for use as a hashcode impementation.
+	/// HashCode output is repeatable given identical input.
+	/// This impementation includes parameter names in uniqueness calculations by default.
+	/// </summary>
 	public class HashCodeExpressionVisitor : IdentityExpressionVisitor
 	{
 		private bool _valueExists;
 		private bool _needsHash;
 		private readonly FNV1aHash _hash;
 
+		/// <summary>
+		/// Gets the calculated HashCode value for the most recent Expression tree visited.
+		/// </summary>
 		public int HashCode
 		{
 			get

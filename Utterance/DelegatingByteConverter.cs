@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utterance
+﻿namespace Utterance
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
+	using System.Threading.Tasks;
+
+	/// <summary>
+	/// Simple implementation of the IByteConverter and IByteConverter[object] interfaces that
+	/// uses a provided converter function as its Convert call.
+	/// </summary>
 	public class DelegatingByteConverter : DelegatingByteConverter<object>, IByteConverter
 	{
 		public DelegatingByteConverter(Func<object, byte[]> converter)
@@ -14,6 +18,11 @@ namespace Utterance
 		}
 	}
 
+	/// <summary>
+	/// Simple implementation of the IByteConverter[T] interfaces that
+	/// uses a provided converter function as its Convert call.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public class DelegatingByteConverter<T> : IByteConverter<T>
 	{
 		private readonly Func<T, byte[]> _converter;

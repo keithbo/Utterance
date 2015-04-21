@@ -8,7 +8,7 @@ using Utterance.Cache;
 
 namespace Utterance
 {
-	internal class AccessCache : ExpressionCache<AccessKey, Expression<ObjectFactory<Access.IAccess>>, AccessCacheItem>
+	internal class AccessCache : ExpressionCacheBase<AccessKey, Expression<ObjectFactory<Access.IAccess>>, AccessCacheItem>
 	{
 		protected override AccessCacheItem CreateCacheItem(AccessKey key, Expression<ObjectFactory<Access.IAccess>> value)
 		{

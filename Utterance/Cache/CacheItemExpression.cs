@@ -7,6 +7,14 @@
 	using System.Text;
 	using System.Threading.Tasks;
 
+	/// <summary>
+	/// CacheItemExpression is an Expression implementation that uses the CanReduce behavior of Expression
+	/// tree visitation to substitute a cached Expression tree in its stead. This allows for scenarios where
+	/// a pre-existing Expression tree can be substituted for potential performance gains.
+	/// This implementation uses string as its key lookup type.
+	/// </summary>
+	/// <typeparam name="TExpression">Type derived from Expression</typeparam>
+	/// <typeparam name="TCacheItem">Type derived from ExpressionCacheItem</typeparam>
 	public class CacheItemExpression<TExpression, TCacheItem> : CacheItemExpression<string, TExpression, TCacheItem>
 		where TExpression : Expression
 		where TCacheItem : ExpressionCacheItem<TExpression>
@@ -17,6 +25,14 @@
 		}
 	}
 
+	/// <summary>
+	/// CacheItemExpression is an Expression implementation that uses the CanReduce behavior of Expression
+	/// tree visitation to substitute a cached Expression tree in its stead. This allows for scenarios where
+	/// a pre-existing Expression tree can be substituted for potential performance gains.
+	/// </summary>
+	/// <typeparam name="TKey">Type that implements IEquatable</typeparam>
+	/// <typeparam name="TExpression">Type derived from Expression</typeparam>
+	/// <typeparam name="TCacheItem">Type derived from ExpressionCacheItem</typeparam>
 	public abstract class CacheItemExpression<TKey, TExpression, TCacheItem> : Expression
 		where TKey : IEquatable<TKey>
 		where TExpression : Expression

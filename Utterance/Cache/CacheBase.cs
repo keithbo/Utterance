@@ -4,6 +4,18 @@
 	using System.Collections.Generic;
 	using System.Threading;
 
+	/// <summary>
+	/// Base caching class provides for easy extension and thread safe storage and retrieval of
+	/// keyed data. This class provides the basic mechanism used by any downstream cache implementations
+	/// without hard-coding the storage type of the cache. As such it is up to the implementing class to
+	/// determine what internal storage unit is used. CacheItem may be sufficient, but can be extended
+	/// for use in subsequent implementations.
+	/// The only real constraint this class has is that key types must be IEquatable in order to determine
+	/// storage bucket and lookup.
+	/// This implementation of CacheBase uses <see cref="string"/> as its key type.
+	/// </summary>
+	/// <typeparam name="TValue">Type to be stored</typeparam>
+	/// <typeparam name="TCacheItem">Type derived from CacheItem</typeparam>
 	public abstract class CacheBase<TValue, TCacheItem> : CacheBase<string, TValue, TCacheItem>
 		where TCacheItem : CacheItem<string, TValue>
 	{
@@ -36,6 +48,19 @@
 		}
 	}
 
+	/// <summary>
+	/// Base caching class provides for easy extension and thread safe storage and retrieval of
+	/// keyed data. This class provides the basic mechanism used by any downstream cache implementations
+	/// without hard-coding the storage type of the cache. As such it is up to the implementing class to
+	/// determine what internal storage unit is used. CacheItem may be sufficient, but can be extended
+	/// for use in subsequent implementations.
+	/// The only real constraint this class has is that key types must be IEquatable in order to determine
+	/// storage bucket and lookup.
+	/// </summary>
+	/// <typeparam name="TKey">Type that implements IEquatable</typeparam>
+	/// <typeparam name="TValue">Type to be stored</typeparam>
+	/// <typeparam name="TCacheItem">Type derived from CacheItem</typeparam>
+	/// <see cref="CacheItem"/>
 	public abstract class CacheBase<TKey, TValue, TCacheItem>
 		where TKey : IEquatable<TKey>
 		where TCacheItem : CacheItem<TKey, TValue>

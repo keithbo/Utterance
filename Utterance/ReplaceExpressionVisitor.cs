@@ -5,6 +5,11 @@
 	using System.Linq;
 	using System.Linq.Expressions;
 
+	/// <summary>
+	/// ExpressionVisitor implementation that takes as input one or more pairs of expressions
+	/// and parses a given Expression tree, replacing any instances of the first half of each
+	/// pair with the second half.
+	/// </summary>
 	public class ReplaceExpressionVisitor : ExpressionVisitor
 	{
 		private IDictionary<Expression, Expression> _pairs;

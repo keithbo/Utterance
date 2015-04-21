@@ -8,6 +8,11 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 
+	/// <summary>
+	/// ResettingExpressionVisitor is a basic implementation of ExpressionVisitor that provides a simple
+	/// abstract implementation which can reset its state upon subsequent calls to a new Expression tree.
+	/// The instance will "reset" on first call of Visit, nested calls will not trigger the reset behavior.
+	/// </summary>
 	public abstract class ResettingExpressionVisitor : ExpressionVisitor
 	{
 		private int _visitCount = 0;
@@ -34,6 +39,9 @@
 			}
 		}
 
+		/// <summary>
+		/// Perform implementation specific resetting of this visitor
+		/// </summary>
 		protected virtual void Reset()
 		{
 		}

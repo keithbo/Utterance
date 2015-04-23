@@ -12,22 +12,17 @@
 	/// This implementation uses string as its key type and ExpressionCacheItem as its internal storage unit.
 	/// </summary>
 	/// <typeparam name="TExpression">Type derived from Expression</typeparam>
-	public class ExpressionCache<TExpression> : ExpressionCacheBase<string, TExpression, ExpressionCacheItem<TExpression>>
+	public class ExpressionCache<TExpression> : ExpressionCache<string, TExpression>
 		where TExpression : Expression
 	{
 		public ExpressionCache()
-			: this(new CacheBase<TExpression, ExpressionCacheItem<TExpression>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+			: this(null, null)
 		{
 		}
 
-		public ExpressionCache(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
-			: base(keyFactory, keyEqualityComparer)
+		public ExpressionCache(ICacheKeyFactory<string> keyFactory, IEqualityComparer<string> keyEqualityComparer)
+			: base(keyFactory ?? new StringCacheKeyFactory(), keyEqualityComparer)
 		{
-		}
-
-		protected override ExpressionCacheItem<TExpression> CreateCacheItem(string key, TExpression value)
-		{
-			return new ExpressionCacheItem<TExpression>(key, value);
 		}
 	}
 
@@ -42,10 +37,11 @@
 		where TExpression : Expression
 	{
 		public ExpressionCache()
+			: this(null, null)
 		{
 		}
 
-		public ExpressionCache(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
+		public ExpressionCache(ICacheKeyFactory<TKey> keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
 			: base(keyFactory, keyEqualityComparer)
 		{
 		}

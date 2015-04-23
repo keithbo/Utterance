@@ -45,6 +45,10 @@
     <Compile Include="Cache\CacheItemExpression.cs" />
     <Compile Include="Cache\ExpressionCacheBase.cs" />
     <Compile Include="Cache\ExpressionCacheItem.cs" />
+    <Compile Include="Cache\ICacheKeyFactory.cs" />
+    <Compile Include="Cache\LambdaCache.cs" />
+    <Compile Include="Cache\LambdaCacheItem.cs" />
+    <Compile Include="Cache\StringCacheKeyFactory.cs" />
     <Compile Include="DelegatingByteConverter.cs" />
     <Compile Include="DelegatingEqualityComparer.cs" />
     <Compile Include="Cache\ExpressionCache.cs" />

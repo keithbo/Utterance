@@ -1,9 +1,11 @@
 ﻿namespace Utterance
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Utterance.Cache;
 
 	public delegate object ObjectFactory(params object[] args);
 
@@ -164,5 +166,49 @@
 		}
 
 		#endregion Generic
+
+		private static readonly LambdaCache<string> _anonymousFactoryCache = new LambdaCache<string>();
+
+		private class FactoryKey : IEquatable<FactoryKey>
+		{
+			private static readonly FNV1aHash _hashCodeGenerator = new FNV1aHash();
+
+			private readonly int _hashCode;
+			private readonly Type _type;
+			private readonly Type[] _parameterTypes;
+
+			public FactoryKey(Type type, Type[] parameterTypes)
+			{
+				_type = type;
+				_parameterTypes = parameterTypes ?? new Type[0];
+
+				_hashCode = MakeHashCode(_type.GetHashCode(), _parameterTypes.Select(t => t.GetHashCode()));
+			}
+
+			public bool Equals(FactoryKey other)
+			{
+				return other != null && other._type == _type && other._parameterTypes.SequenceEqual(_parameterTypes);
+			}
+
+			public override bool Equals(object obj)
+			{
+				return Equals(obj as FactoryKey);
+			}
+
+			public override int GetHashCode()
+			{
+				return _hashCode;
+			}
+
+			private static int MakeHashCode(int first, IEnumerable<int> more)
+			{
+				lock (_hashCodeGenerator)
+				{
+					_hashCodeGenerator.Reset();
+					_hashCodeGenerator.Step(first);
+					return _hashCodeGenerator.Step(more);
+				}
+			}
+		}
 	}
 }

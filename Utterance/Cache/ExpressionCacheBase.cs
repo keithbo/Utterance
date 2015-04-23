@@ -16,11 +16,7 @@
 		where TExpression : Expression
 		where TCacheItem : ExpressionCacheItem<TKey, TExpression>
 	{
-		protected ExpressionCacheBase()
-		{
-		}
-
-		protected ExpressionCacheBase(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
+		protected ExpressionCacheBase(ICacheKeyFactory<TKey> keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
 			: base(keyFactory, keyEqualityComparer)
 		{
 		}

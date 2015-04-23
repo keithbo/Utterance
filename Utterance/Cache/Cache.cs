@@ -7,21 +7,16 @@
 	/// Implementation of Cache that uses string as its key type and CacheItem as its storage unit.
 	/// </summary>
 	/// <typeparam name="TValue">Type to be stored</typeparam>
-	public class Cache<TValue> : CacheBase<TValue, CacheItem<TValue>>
+	public class Cache<TValue> : Cache<string, TValue>
 	{
 		public Cache()
-			: this(new CacheBase<TValue, CacheItem<TValue>>.StringCacheKeyFactory(), EqualityComparer<string>.Default)
+			: this(null, null)
 		{
 		}
 
-		public Cache(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
-			: base(keyFactory, keyEqualityComparer)
+		public Cache(ICacheKeyFactory<string> keyFactory, IEqualityComparer<string> keyEqualityComparer)
+			: base(keyFactory ?? new StringCacheKeyFactory(), keyEqualityComparer)
 		{
-		}
-
-		protected override CacheItem<TValue> CreateCacheItem(string key, TValue value)
-		{
-			return new CacheItem<TValue>(key, value);
 		}
 	}
 
@@ -35,10 +30,11 @@
 		where TKey : IEquatable<TKey>
 	{
 		public Cache()
+			: this(null, null)
 		{
 		}
 
-		public Cache(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
+		public Cache(ICacheKeyFactory<TKey> keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
 			: base(keyFactory, keyEqualityComparer)
 		{
 		}

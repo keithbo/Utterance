@@ -9,20 +9,6 @@
 	/// <summary>
 	/// Base cache storage unit. This class can be extended for downstream <see cref="Cache"/> implementations
 	/// to allow additional data to be stored alongside the base values.
-	/// This implementation uses <see cref="string"/> as its key lookup type.
-	/// </summary>
-	/// <typeparam name="TValue">Type to be stored</typeparam>
-	public class CacheItem<TValue> : CacheItem<string, TValue>
-	{
-		public CacheItem(string key, TValue value)
-			: base(key, value)
-		{
-		}
-	}
-
-	/// <summary>
-	/// Base cache storage unit. This class can be extended for downstream <see cref="Cache"/> implementations
-	/// to allow additional data to be stored alongside the base values.
 	/// </summary>
 	/// <typeparam name="TKey">Type that implements IEquatable</typeparam>
 	/// <typeparam name="TValue">Type to be stored</typeparam>

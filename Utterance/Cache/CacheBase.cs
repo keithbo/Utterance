@@ -12,50 +12,6 @@
 	/// for use in subsequent implementations.
 	/// The only real constraint this class has is that key types must be IEquatable in order to determine
 	/// storage bucket and lookup.
-	/// This implementation of CacheBase uses <see cref="string"/> as its key type.
-	/// </summary>
-	/// <typeparam name="TValue">Type to be stored</typeparam>
-	/// <typeparam name="TCacheItem">Type derived from CacheItem</typeparam>
-	public abstract class CacheBase<TValue, TCacheItem> : CacheBase<string, TValue, TCacheItem>
-		where TCacheItem : CacheItem<string, TValue>
-	{
-
-		protected CacheBase()
-		{
-		}
-
-		protected CacheBase(ICacheKeyFactory keyFactory, IEqualityComparer<string> keyEqualityComparer)
-			: base(keyFactory, keyEqualityComparer)
-		{
-		}
-
-		public class StringCacheKeyFactory : CacheBase<string, TValue, TCacheItem>.ICacheKeyFactory
-		{
-			private readonly string _root;
-			private int _index;
-
-			public StringCacheKeyFactory()
-			{
-				_root = Guid.NewGuid().ToString();
-				_index = 0;
-			}
-
-			public string NewKey()
-			{
-				var next = Interlocked.Increment(ref _index);
-				return _root + next;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Base caching class provides for easy extension and thread safe storage and retrieval of
-	/// keyed data. This class provides the basic mechanism used by any downstream cache implementations
-	/// without hard-coding the storage type of the cache. As such it is up to the implementing class to
-	/// determine what internal storage unit is used. CacheItem may be sufficient, but can be extended
-	/// for use in subsequent implementations.
-	/// The only real constraint this class has is that key types must be IEquatable in order to determine
-	/// storage bucket and lookup.
 	/// </summary>
 	/// <typeparam name="TKey">Type that implements IEquatable</typeparam>
 	/// <typeparam name="TValue">Type to be stored</typeparam>
@@ -67,21 +23,16 @@
 	{
 		private readonly IEqualityComparer<TKey> _keyEqualityComparer;
 		private readonly Dictionary<TKey, TCacheItem> _cache;
-		private readonly ICacheKeyFactory _keyFactory;
+		private readonly ICacheKeyFactory<TKey> _keyFactory;
 		private readonly object _synchronizationContext = new object();
 		protected object SynchronizationContext
 		{
 			get { return _synchronizationContext; }
 		}
 
-		protected CacheBase()
-			: this(null, null)
+		protected CacheBase(ICacheKeyFactory<TKey> keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
 		{
-		}
-
-		protected CacheBase(ICacheKeyFactory keyFactory, IEqualityComparer<TKey> keyEqualityComparer)
-		{
-			_keyFactory = keyFactory ?? new DefaultCacheKeyFactory();
+			_keyFactory = keyFactory ?? new DefaultCacheKeyFactory<TKey>();
 			_keyEqualityComparer = keyEqualityComparer ?? EqualityComparer<TKey>.Default;
 			_cache = new Dictionary<TKey, TCacheItem>(_keyEqualityComparer);
 		}
@@ -207,18 +158,5 @@
 		#endregion Get
 
 		protected abstract TCacheItem CreateCacheItem(TKey key, TValue value);
-
-		public interface ICacheKeyFactory
-		{
-			TKey NewKey();
-		}
-
-		public class DefaultCacheKeyFactory : ICacheKeyFactory
-		{
-			public TKey NewKey()
-			{
-				throw new NotSupportedException("Automatic key generation not supported");
-			}
-		}
 	}
 }

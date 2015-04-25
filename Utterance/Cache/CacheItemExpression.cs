@@ -17,7 +17,7 @@
 	/// <typeparam name="TCacheItem">Type derived from ExpressionCacheItem</typeparam>
 	public class CacheItemExpression<TExpression, TCacheItem> : CacheItemExpression<string, TExpression, TCacheItem>
 		where TExpression : Expression
-		where TCacheItem : ExpressionCacheItem<TExpression>
+		where TCacheItem : ExpressionCacheItem<string, TExpression>
 	{
 		public CacheItemExpression(TCacheItem cacheItem)
 			: base(cacheItem)

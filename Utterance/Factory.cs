@@ -31,18 +31,7 @@
 		/// <returns>Anonymous ObjectFactory delegate</returns>
 		public static Expression<ObjectFactory> NewExpression(Type type, params Type[] argumentTypes)
 		{
-			Type[] args = argumentTypes ?? new Type[0];
-			return args.Length == 0 ? NewExpressionNoArgs(type) : NewExpression(type.GetConstructor(args));
-		}
-
-		private static Expression<ObjectFactory> NewExpressionNoArgs(Type type)
-		{
-			var key = new FactoryKey(type, null);
-			var item = _anonymousFactoryCache.GetOrAdd(key, k =>
-			{
-				return Expression.Lambda<ObjectFactory>(Expression.New(type), ArgsParameter);
-			});
-			return (Expression<ObjectFactory>)item.Value;
+			return (Expression<ObjectFactory>)FromTypes(type, argumentTypes ?? new Type[0]).Value;
 		}
 
 		/// <summary>
@@ -53,7 +42,7 @@
 		/// <returns>Anonymous ObjectFactory delegate</returns>
 		public static ObjectFactory New(Type type, params Type[] argumentTypes)
 		{
-			return NewExpression(type, argumentTypes).Compile();
+			return (ObjectFactory)FromTypes(type, argumentTypes).Compiled;
 		}
 
 		/// <summary>
@@ -63,8 +52,7 @@
 		/// <returns>Anonymous ObjectFactory delegate</returns>
 		public static Expression<ObjectFactory> NewExpression(ConstructorInfo ctor)
 		{
-			NewExpression newExp = Expression.New(ctor, ctor.GetParameters().Select((p, i) => Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p.ParameterType)));
-			return Expression.Lambda<ObjectFactory>(newExp, ArgsParameter);
+			return (Expression<ObjectFactory>)FromConstructor(ctor).Value;
 		}
 
 		/// <summary>
@@ -74,7 +62,7 @@
 		/// <returns>Anonymous ObjectFactory delegate</returns>
 		public static ObjectFactory New(ConstructorInfo ctor)
 		{
-			return NewExpression(ctor).Compile();
+			return (ObjectFactory)FromConstructor(ctor).Compiled;
 		}
 		#endregion Anonymous
 		#region Generic
@@ -87,7 +75,7 @@
 		/// <returns></returns>
 		public static Expression<ObjectFactory<T>> NewExpression<T>(params Type[] argumentTypes)
 		{
-			return NewExpression<T>(typeof(T), argumentTypes);
+			return (Expression<ObjectFactory<T>>)FromTypes<T>(typeof(T), argumentTypes ?? new Type[0]).Value;
 		}
 
 		/// <summary>
@@ -99,10 +87,9 @@
 		/// <param name="type">Type to be instantiated by the ObjectFactory delegate</param>
 		/// <param name="argumentTypes">Type parameters for the delegate construction</param>
 		/// <returns>Expression lambda of type ObjectFactory[T]</returns>
-		public static Expression<ObjectFactory<T>> NewExpression<T>(Type type, params Type[] argumentTypes)
+		public static Expression<ObjectFactory<T>> NewExpression<T>(Type type, Type[] argumentTypes)
 		{
-			Type[] args = argumentTypes ?? new Type[0];
-			return args.Length == 0 ? NewExpressionNoArgs<T>(type) : NewExpression<T>(typeof(T).GetConstructor(args));
+			return (Expression<ObjectFactory<T>>)FromTypes<T>(type, argumentTypes ?? new Type[0]).Value;
 		}
 
 		/// <summary>
@@ -115,23 +102,7 @@
 		/// <returns>Expression lambda of type ObjectFactory[T]</returns>
 		public static Expression<ObjectFactory<T>> NewExpression<T>(ConstructorInfo ctor)
 		{
-			NewExpression newExp = Expression.New(ctor, ctor.GetParameters().Select((p, i) => Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p.ParameterType)));
-			return Expression.Lambda<ObjectFactory<T>>(newExp, ArgsParameter);
-		}
-
-		/// <summary>
-		/// Constructs a new strong typed ObjectFactory[T] LambdaExpression with given argument types
-		/// for construction parameters. Takes a seperate type as input for detailing which type to construct
-		/// in the ObjectFactory delegate. This type must be assignable to <typeparamref name="T"/>.
-		/// Note: This method generates an ObjectFactory instance that requires no arguments as input, it is a shorthand
-		/// optimization since there is no point in building parameter input for a no-args constructor.
-		/// </summary>
-		/// <typeparam name="T">Type to be returned by the ObjectFactory delegate</typeparam>
-		/// <param name="type">Type to be instantiated by the ObjectFactory delegate</param>
-		/// <returns>Expression lambda of type ObjectFactory[T]</returns>
-		private static Expression<ObjectFactory<T>> NewExpressionNoArgs<T>(Type type)
-		{
-			return Expression.Lambda<ObjectFactory<T>>(Expression.New(type), ArgsParameter);
+			return (Expression<ObjectFactory<T>>)FromConstructor<T>(ctor).Value;
 		}
 
 		/// <summary>
@@ -142,7 +113,7 @@
 		/// <returns>Compiled ObjectFactory[T] instance</returns>
 		public static ObjectFactory<T> New<T>(params Type[] parameterTypes)
 		{
-			return NewExpression<T>(typeof(T), parameterTypes).Compile();
+			return (ObjectFactory<T>)FromTypes<T>(typeof(T), parameterTypes ?? new Type[0]).Compiled;
 		}
 
 		/// <summary>
@@ -153,9 +124,9 @@
 		/// <param name="type">Type to be instantiated by the ObjectFactory delegate</param>
 		/// <param name="parameterTypes">Types of the parameters used for constructing <paramref name="type"/></param>
 		/// <returns>Compiled ObjectFactory[T] instance</returns>
-		public static ObjectFactory<T> New<T>(Type type, params Type[] parameterTypes)
+		public static ObjectFactory<T> New<T>(Type type, Type[] parameterTypes)
 		{
-			return NewExpression<T>(type, parameterTypes).Compile();
+			return (ObjectFactory<T>)FromTypes<T>(type, parameterTypes ?? new Type[0]).Compiled;
 		}
 
 		/// <summary>
@@ -167,10 +138,81 @@
 		/// <returns>Compiled ObjectFactory[T] instance</returns>
 		public static ObjectFactory<T> New<T>(ConstructorInfo ctor)
 		{
-			return NewExpression<T>(ctor).Compile();
+			return (ObjectFactory<T>)FromConstructor<T>(ctor).Compiled;
 		}
 
 		#endregion Generic
+		#region Helpers
+		private static LambdaCacheItem<FactoryKey> FromTypes(Type type, Type[] parameterTypes)
+		{
+			var key = new FactoryKey(type, type, parameterTypes);
+			return _anonymousFactoryCache.GetOrAdd(key, k =>
+			{
+				NewExpression newExp;
+				if (parameterTypes.Length == 0)
+				{
+					newExp = Expression.New(type);
+				}
+				else
+				{
+					newExp =
+						Expression.New(type.GetConstructor(parameterTypes), parameterTypes.Select((p, i) =>
+							Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p)));
+				}
+				return Expression.Lambda<ObjectFactory>(newExp, ArgsParameter);
+			});
+		}
+
+		private static LambdaCacheItem<FactoryKey> FromTypes<T>(Type type, Type[] parameterTypes)
+		{
+			var key = new FactoryKey(typeof(T), type, parameterTypes);
+			return _anonymousFactoryCache.GetOrAdd(key, k =>
+			{
+				NewExpression newExp;
+				if (parameterTypes.Length == 0)
+				{
+					newExp = Expression.New(type);
+				}
+				else
+				{
+					newExp =
+						Expression.New(type.GetConstructor(parameterTypes), parameterTypes.Select((p, i) =>
+							Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p)));
+				}
+				return Expression.Lambda<ObjectFactory<T>>(newExp, ArgsParameter);
+			});
+		}
+
+		private static LambdaCacheItem<FactoryKey> FromConstructor(ConstructorInfo ctor)
+		{
+			var parameters = ctor.GetParameters();
+			var parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
+
+			var key = new FactoryKey(ctor.DeclaringType, ctor.DeclaringType, parameterTypes);
+			return _anonymousFactoryCache.GetOrAdd(key, k =>
+			{
+				NewExpression newExp =
+					Expression.New(ctor, parameterTypes.Select((p, i) =>
+						Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p)));
+				return Expression.Lambda<ObjectFactory>(newExp, ArgsParameter);
+			});
+		}
+
+		private static LambdaCacheItem<FactoryKey> FromConstructor<T>(ConstructorInfo ctor)
+		{
+			var parameters = ctor.GetParameters();
+			var parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
+
+			var key = new FactoryKey(typeof(T), ctor.DeclaringType, parameterTypes);
+			return _anonymousFactoryCache.GetOrAdd(key, k =>
+			{
+				NewExpression newExp =
+					Expression.New(ctor, parameterTypes.Select((p, i) =>
+						Expression.Convert(Expression.ArrayIndex(ArgsParameter, Expression.Constant(i)), p)));
+				return Expression.Lambda<ObjectFactory<T>>(newExp, ArgsParameter);
+			});
+		}
+		#endregion Helpers
 
 		private static readonly LambdaCache<FactoryKey> _anonymousFactoryCache = new LambdaCache<FactoryKey>();
 
@@ -179,20 +221,23 @@
 			private static readonly FNV1aHash _hashCodeGenerator = new FNV1aHash();
 
 			private readonly int _hashCode;
-			private readonly Type _type;
-			private readonly Type[] _parameterTypes;
+			private readonly Type[] _types;
 
-			public FactoryKey(Type type, Type[] parameterTypes)
+			public FactoryKey(Type castType, Type type, Type[] parameterTypes)
+				: this(new Type[] { castType, type }, parameterTypes)
 			{
-				_type = type;
-				_parameterTypes = parameterTypes ?? new Type[0];
+			}
 
-				_hashCode = MakeHashCode(_type.GetHashCode(), _parameterTypes.Select(t => t.GetHashCode()));
+			public FactoryKey(Type[] types, Type[] parameterTypes)
+			{
+				_types = parameterTypes == null ? types : types.Concat(parameterTypes).ToArray();
+
+				_hashCode = MakeHashCode(_types.Select(t => t.GetHashCode()));
 			}
 
 			public bool Equals(FactoryKey other)
 			{
-				return other != null && other._type == _type && other._parameterTypes.SequenceEqual(_parameterTypes);
+				return other != null && other._types.SequenceEqual(_types);
 			}
 
 			public override bool Equals(object obj)
@@ -205,12 +250,11 @@
 				return _hashCode;
 			}
 
-			private static int MakeHashCode(int first, IEnumerable<int> more)
+			private static int MakeHashCode(IEnumerable<int> more)
 			{
 				lock (_hashCodeGenerator)
 				{
 					_hashCodeGenerator.Reset();
-					_hashCodeGenerator.Step(first);
 					return _hashCodeGenerator.Step(more);
 				}
 			}

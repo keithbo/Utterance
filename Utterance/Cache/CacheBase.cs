@@ -157,6 +157,14 @@
 
 		#endregion Get
 
+		public void Clear()
+		{
+			lock (SynchronizationContext)
+			{
+				_cache.Clear();
+			}
+		}
+
 		protected abstract TCacheItem CreateCacheItem(TKey key, TValue value);
 	}
 }

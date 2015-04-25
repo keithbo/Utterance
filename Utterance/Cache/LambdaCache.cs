@@ -19,6 +19,11 @@
 			: base(keyFactory, keyEqualityComparer)
 		{
 		}
+
+		protected override LambdaCacheItem<TKey> CreateCacheItem(TKey key, LambdaExpression value)
+		{
+			return new LambdaCacheItem<TKey>(key, value);
+		}
 	}
 
 	//public class LambdaCache<TDelegate> : LambdaCache<string, TDelegate>

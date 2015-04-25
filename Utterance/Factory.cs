@@ -37,7 +37,12 @@
 
 		private static Expression<ObjectFactory> NewExpressionNoArgs(Type type)
 		{
-			return Expression.Lambda<ObjectFactory>(Expression.New(type), ArgsParameter);
+			var key = new FactoryKey(type, null);
+			var item = _anonymousFactoryCache.GetOrAdd(key, k =>
+			{
+				return Expression.Lambda<ObjectFactory>(Expression.New(type), ArgsParameter);
+			});
+			return (Expression<ObjectFactory>)item.Value;
 		}
 
 		/// <summary>
@@ -167,7 +172,7 @@
 
 		#endregion Generic
 
-		private static readonly LambdaCache<string> _anonymousFactoryCache = new LambdaCache<string>();
+		private static readonly LambdaCache<FactoryKey> _anonymousFactoryCache = new LambdaCache<FactoryKey>();
 
 		private class FactoryKey : IEquatable<FactoryKey>
 		{

@@ -1,9 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-	/// <summary>
+    /// <summary>
 	/// Implementation of Cache that uses string as its key type and CacheItem as its storage unit.
 	/// </summary>
 	/// <typeparam name="TValue">Type to be stored</typeparam>

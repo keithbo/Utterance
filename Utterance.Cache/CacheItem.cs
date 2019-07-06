@@ -1,12 +1,8 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
 
-	/// <summary>
+    /// <summary>
 	/// Base cache storage unit. This class can be extended for downstream <see cref="Cache"/> implementations
 	/// to allow additional data to be stored alongside the base values.
 	/// </summary>

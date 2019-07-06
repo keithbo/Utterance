@@ -1,10 +1,10 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
 
-	/// <summary>
+    /// <summary>
 	/// A base Cache implementation that stores Expression trees using an equatable key type for lookup
 	/// and retrieval.
 	/// </summary>

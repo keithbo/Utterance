@@ -1,13 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
+    using System.Linq.Expressions;
 
-	public class LambdaCacheItem<TKey> : ExpressionCacheItem<TKey, LambdaExpression>
+    public class LambdaCacheItem<TKey> : ExpressionCacheItem<TKey, LambdaExpression>
 		where TKey : IEquatable<TKey>
 	{
 		private Delegate _compiled;

@@ -1,13 +1,12 @@
 ﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Reflection;
-	using Utterance.Cache;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
 
-	public delegate object ObjectFactory(params object[] args);
+    public delegate object ObjectFactory(params object[] args);
 
 	public delegate T ObjectFactory<T>(params object[] args);
 

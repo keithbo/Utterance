@@ -1,13 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
+    using System.Linq.Expressions;
 
-	/// <summary>
+    /// <summary>
 	/// CacheItem implementation that explicitly stores Expression derivatives for a Cache implementation.
 	/// </summary>
 	/// <typeparam name="TKey">IEquatable type used as a key for lookup</typeparam>

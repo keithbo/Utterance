@@ -1,13 +1,10 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
 
-	public class LambdaCache<TKey> : ExpressionCacheBase<TKey, LambdaExpression, LambdaCacheItem<TKey>>
+    public class LambdaCache<TKey> : ExpressionCacheBase<TKey, LambdaExpression, LambdaCacheItem<TKey>>
 		where TKey : IEquatable<TKey>
 	{
 		public LambdaCache()

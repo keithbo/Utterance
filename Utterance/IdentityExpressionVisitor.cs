@@ -1,15 +1,12 @@
 ﻿namespace Utterance
 {
 	using System;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Reflection;
 	using System.Text;
-	using System.Threading;
-	using System.Threading.Tasks;
-	using Utterance.Cache;
 
 	/// <summary>
 	/// This is a complete abstract implementation of ExpressionVisitor that upon visitation of an
@@ -275,7 +272,7 @@
 
 		protected static readonly byte[] NullValue = new byte[] { (byte)0 };
 
-		private Cache<IByteConverter> _byteConverterCache;
+		private ConcurrentDictionary<Type, IByteConverter> _byteConverterCache;
 
 		protected byte[] ToBytes(object value)
 		{
@@ -306,26 +303,21 @@
 
 		protected IByteConverter GetConverter(Type keyType)
 		{
-			IByteConverter converter;
-			if (_byteConverterCache == null)
-			{
-				if (!Converters.ByteConverters.TryGetValue(keyType, out converter))
-				{
-					converter = Converters.ByteConverters[typeof(object)];
-				}
-			}
-			else
-			{
-				var item = _byteConverterCache.Get(keyType.FullName) ?? _byteConverterCache.Get(typeof(object).FullName);
-				converter = item.Value;
-			}
+            var map = _byteConverterCache ?? Converters.ByteConverters;
+
+            IByteConverter converter;
+            if (!map.TryGetValue(keyType, out converter))
+            {
+                converter = map[typeof(object)];
+            }
+
 			return converter;
 		}
 
 		protected void RegisterByteConverter(Type keyType, IByteConverter converter)
 		{
 			EnsureCache();
-			_byteConverterCache.AddOrUpdate(keyType.FullName, converter, (k, v) => converter);
+			_byteConverterCache.AddOrUpdate(keyType, converter, (k, v) => converter);
 		}
 
 		protected void RegisterByteConverter<T>(IByteConverter<T> converter)
@@ -337,8 +329,7 @@
 		{
 			if (_byteConverterCache != null) return;
 
-			_byteConverterCache = new Cache<IByteConverter>();
-			_byteConverterCache.AddAll(Converters.ByteConverters.ToDictionary(p => p.Key.FullName, p => p.Value));
+			_byteConverterCache = new ConcurrentDictionary<Type, IByteConverter>(Converters.ByteConverters);
 		}
 
 		private class CastByteConverterAdapter<T> : IByteConverter

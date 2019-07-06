@@ -1,13 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using System.Threading;
-	using System.Threading.Tasks;
+    using System;
+    using System.Threading;
 
-	public class StringCacheKeyFactory : ICacheKeyFactory<string>
+    public class StringCacheKeyFactory : ICacheKeyFactory<string>
 	{
 		private readonly string _root;
 		private int _index;

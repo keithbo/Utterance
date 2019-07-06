@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <RootNamespace>Utterance</RootNamespace>
-    <AssemblyName>Utterance</AssemblyName>
+    <AssemblyName>Utterance.Cache</AssemblyName>
     <Authors>Keith Bosacker</Authors>
     <Company />
     <Description>Library of utility classes for interacting with and operating on System.Linq.Expression trees</Description>
@@ -19,5 +19,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utterance\Utterance.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -1,13 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
+    using System.Linq.Expressions;
 
-	/// <summary>
+    /// <summary>
 	/// CacheItemExpression is an Expression implementation that uses the CanReduce behavior of Expression
 	/// tree visitation to substitute a cached Expression tree in its stead. This allows for scenarios where
 	/// a pre-existing Expression tree can be substituted for potential performance gains.

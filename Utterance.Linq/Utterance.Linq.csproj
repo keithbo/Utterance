@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Utterance.Cache\Utterance.Cache.csproj" />
     <ProjectReference Include="..\Utterance\Utterance.csproj" />
   </ItemGroup>
 </Project>

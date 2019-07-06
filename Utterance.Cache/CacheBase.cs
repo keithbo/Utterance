@@ -1,10 +1,9 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Threading;
+    using System;
+    using System.Collections.Generic;
 
-	/// <summary>
+    /// <summary>
 	/// Base caching class provides for easy extension and thread safe storage and retrieval of
 	/// keyed data. This class provides the basic mechanism used by any downstream cache implementations
 	/// without hard-coding the storage type of the cache. As such it is up to the implementing class to

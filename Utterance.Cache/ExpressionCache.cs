@@ -1,13 +1,10 @@
-﻿namespace Utterance.Cache
+﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Text;
-	using System.Threading.Tasks;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
 
-	/// <summary>
+    /// <summary>
 	/// Cache implementation that stores and retrieves Expression trees for performance expression interaction.
 	/// This implementation uses string as its key type and ExpressionCacheItem as its internal storage unit.
 	/// </summary>

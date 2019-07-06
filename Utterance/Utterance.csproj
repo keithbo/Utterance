@@ -1,82 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EA062450-2968-43E0-ADCE-FDB73D149E20}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <RootNamespace>Utterance</RootNamespace>
     <AssemblyName>Utterance</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <Authors>Keith Bosacker</Authors>
+    <Company />
+    <Description>Library of utility classes for interacting with and operating on System.Linq.Expression trees</Description>
+    <PackageTags>Linq Expression ExpressionVisitor</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/keithbo/Utterance</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/keithbo/Utterance</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Cache\Cache.cs" />
-    <Compile Include="Cache\CacheBase.cs" />
-    <Compile Include="Cache\CacheItem.cs" />
-    <Compile Include="Cache\CacheItemExpression.cs" />
-    <Compile Include="Cache\DefaultCacheKeyFactory.cs" />
-    <Compile Include="Cache\ExpressionCacheBase.cs" />
-    <Compile Include="Cache\ExpressionCacheItem.cs" />
-    <Compile Include="Cache\ICacheKeyFactory.cs" />
-    <Compile Include="Cache\LambdaCache.cs" />
-    <Compile Include="Cache\LambdaCacheItem.cs" />
-    <Compile Include="Cache\StringCacheKeyFactory.cs" />
-    <Compile Include="DelegatingByteConverter.cs" />
-    <Compile Include="DelegatingEqualityComparer.cs" />
-    <Compile Include="Cache\ExpressionCache.cs" />
-    <Compile Include="ExpressionEnumerator.cs" />
-    <Compile Include="ExpressionEqualityComparer.cs" />
-    <Compile Include="ExpressionExtensions.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="FNV1AHash.cs" />
-    <Compile Include="HashCodeExpressionVisitor.cs" />
-    <Compile Include="IByteConverter.cs" />
-    <Compile Include="IdentityExpressionVisitor.cs" />
-    <Compile Include="IExpressionArchive.cs" />
-    <Compile Include="ArchiveExpressionVisitor.cs" />
-    <Compile Include="LambdaExpressionExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReplaceExpressionVisitor.cs" />
-    <Compile Include="ResettingExpressionVisitor.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Utterance.nuspec" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

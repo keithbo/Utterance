@@ -1,7 +1,7 @@
 ﻿namespace Utterance
 {
     public interface ICacheKeyFactory<TKey>
-	{
-		TKey NewKey();
-	}
+    {
+        TKey NewKey();
+    }
 }

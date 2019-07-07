@@ -1,12 +1,8 @@
 ﻿namespace Utterance
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Threading;
+    using Utterance.Hashing;
 
-	/// <summary>
+    /// <summary>
 	/// ExpressionVisitor implementation based on IdentityExpressionVisitor. This class will
 	/// construct an FNV1a hash representation of an Expression tree for use as a hashcode impementation.
 	/// HashCode output is repeatable given identical input.
@@ -32,26 +28,9 @@
 				if (_needsHash)
 				{
 					_needsHash = false;
-					_hash.Step(ToIntegerArray(this.Bytes));
+					_hash.Step(HashHelpers.ToIntegerArray(this.Bytes));
 				}
-				return _hash.Value; 
-			}
-		}
-
-		private const int StepSize = sizeof(int);
-		private static IEnumerable<int> ToIntegerArray(byte[] bytes)
-		{
-			var bytesOffsetGap = bytes.Length % StepSize;
-			var bytesWholeLength = bytes.Length - bytesOffsetGap;
-			for (int b = 0; b < bytesWholeLength; b += StepSize)
-			{
-				yield return BitConverter.ToInt32(bytes, b);
-			}
-			if (bytesOffsetGap > 0)
-			{
-				var lastBytes = new byte[StepSize];
-				Array.Copy(bytes, bytesWholeLength, lastBytes, 0, bytesOffsetGap);
-				yield return BitConverter.ToInt32(lastBytes, 0);
+				return _hash.Value.GetInt(); 
 			}
 		}
 

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Utterance.Hashing;
 
     public delegate object ObjectFactory(params object[] args);
 
@@ -254,8 +255,9 @@
 				lock (_hashCodeGenerator)
 				{
 					_hashCodeGenerator.Reset();
-					return _hashCodeGenerator.Step(more);
-				}
+					_hashCodeGenerator.Step(more);
+                    return _hashCodeGenerator.Value.GetInt();
+                }
 			}
 		}
 	}

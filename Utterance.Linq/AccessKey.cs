@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Utterance
 {
-	internal class AccessKey : IEquatable<AccessKey>
+    using Utterance.Hashing;
+
+    internal class AccessKey : IEquatable<AccessKey>
 	{
 		private readonly int _hashCode;
 
@@ -28,7 +30,7 @@ namespace Utterance
 			var hash = new FNV1aHash();
 			hash.Step(group.GetHashCode());
 			hash.Step(types.Select(t => t.GetHashCode()).ToArray());
-			_hashCode = hash.Value;
+			_hashCode = hash.Value.GetInt();
 
 			Group = group;
 			Types = new ReadOnlyCollection<Type>(types);
